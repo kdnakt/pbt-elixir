@@ -1,8 +1,15 @@
 defmodule PbtTest do
   use ExUnit.Case
+  use PropCheck
   doctest Pbt
 
-  test "greets the world" do
-    assert Pbt.hello() == :world
+  property "always works" do
+    forall type <- term() do
+      boolean(type)
+    end
+  end
+
+  def boolean(_) do
+    true
   end
 end
