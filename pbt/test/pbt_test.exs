@@ -9,7 +9,17 @@ defmodule PbtTest do
     end
   end
 
+  property "find max item" do
+    forall x <- list(integer()) do
+      biggest(x) == List.last(Enum.sort(x))
+    end
+  end
+
   def boolean(_) do
     true
+  end
+
+  def biggest([head | _tail]) do
+    head
   end
 end
