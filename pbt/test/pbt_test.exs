@@ -9,6 +9,16 @@ defmodule PbtTest do
     end
   end
 
+  property "Pbt: find max item" do
+    forall x <- non_empty(list(integer())) do
+      Pbt.biggest(x) == model_biggest(x)
+    end
+  end
+
+  def model_biggest(list) do
+    List.last(Enum.sort(list))
+  end
+
   property "find max item" do
     forall x <- non_empty(list(integer())) do
       biggest(x) == List.last(Enum.sort(x))
