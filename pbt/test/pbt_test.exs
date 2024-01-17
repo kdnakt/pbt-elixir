@@ -19,6 +19,13 @@ defmodule PbtTest do
     List.last(Enum.sort(list))
   end
 
+  property "Find last" do
+    forall {list, known_last} <- {list(number()), number()} do
+      known_list = list ++ [known_last]
+      known_last == List.last(known_list)
+    end
+  end
+
   property "find max item" do
     forall x <- non_empty(list(integer())) do
       biggest(x) == List.last(Enum.sort(x))
