@@ -51,4 +51,38 @@ defmodule PbtTest do
   defp biggest([head | tail], max) when head < max do
     biggest(tail, max)
   end
+
+  property "sorted list has ordered pair" do
+    forall list <- list(term()) do
+      is_ordered(Enum.sort(list))
+    end
+  end
+
+  def is_ordered([a, b | t]) do
+    a <= b and is_ordered([b | t])
+  end
+
+  def is_ordered(_) do
+    true
+  end
+
+  property "sorted list has the same size as before" do
+    forall l <- list(number()) do
+      length(l) == length(Enum.sort(l))
+    end
+  end
+
+  property "no items added" do
+    forall l <- list(number()) do
+      sorted = Enum.sort(l)
+      Enum.all?(sorted, fn elem -> elem in l end)
+    end
+  end
+
+  property "no items removed" do
+    forall l <- list(number()) do
+      sorted = Enum.sort(l)
+      Enum.all?(l, fn elem -> elem in sorted end)
+    end
+  end
 end
