@@ -16,4 +16,16 @@ defmodule ExerciseTest do
       res == model_union
     end
   end
+
+  property "dict merge" do
+    forall {list_a, list_b} <-
+             {list({term(), term()}), list({term(), term()})} do
+      merged =
+        Map.merge(Map.new(list_a), Map.new(list_b), fn _k,v1,_v2 -> v1 end)
+      extract_keys(Enum.sort(Map.to_list(merged))) ==
+        Enum.sort(Enum.uniq(extract_keys(list_a ++ list_b)))
+    end
+  end
+
+  def extract_keys(list), do: for({k, _} <- list, do: k)
 end
