@@ -14,7 +14,7 @@ defmodule Chap4 do
     end
   end
 
-  def key(), do: integer()
+  def key(), do: oneof([range(1,10), integer()])
   def val(), do: term()
 
   property "collect 1", [:verbose] do
