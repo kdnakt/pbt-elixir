@@ -25,7 +25,7 @@ defmodule Chap4 do
 
   property "collect 2", [:verbose] do
     forall bin <- binary() do
-      collect(is_binary(bin), to_range(10, byte_size()))
+      collect(is_binary(bin), to_range(10, byte_size(bin)))
     end
   end
 
@@ -34,4 +34,12 @@ defmodule Chap4 do
     {base * m, (base + 1) * m}
   end
 
+  property "aggregate", [:verbose] do
+    suits = [:club, :diamond, :heart, :space]
+
+    forall hand <- vector(5, {oneof(suits), choose(1, 13)}) do
+      # always pass
+      aggregate(true, hand)
+    end
+  end
 end
