@@ -76,4 +76,11 @@ defmodule Chap4 do
     is_punctuation = fn c -> c in '.,;:\'"-' end
     length(for <<c::utf8 <- str>>, is_punctuation.(c), do: 1)
   end
+
+  property "resize", [:verbose] do
+    forall bin <- resize(150, binary()) do
+      collect(is_binary(bin), to_range(10, byte_size(bin)))
+    end
+  end
+
 end
