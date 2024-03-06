@@ -94,4 +94,17 @@ defmodule Chap4 do
       aggregate(true, name: name_len, bio: bio_len)
     end
   end
+
+  property "profile 2", [:verbose] do
+    forall profile <- [
+             name: utf8(),
+             age: pos_integer(),
+             bio: sized(s, resize(s * 35, utf8()))
+           ] do
+      name_len = to_range(10, String.length(profile[:name]))
+      bio_len = to_range(300, String.length(profile[:bio]))
+      aggregate(true, name: name_len, bio: bio_len)
+    end
+  end
+
 end
