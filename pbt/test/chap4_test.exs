@@ -107,4 +107,10 @@ defmodule Chap4 do
     end
   end
 
+  property "naive queue" do
+    forall list <- list({term(), term()}) do
+      q = :queue.from_list(list)
+      :queue.is_queue(q)
+    end
+  end
 end
