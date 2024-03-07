@@ -113,4 +113,17 @@ defmodule Chap4 do
       :queue.is_queue(q)
     end
   end
+
+  property "queue with let macro" do
+    forall q <- queue() do
+      :queue.is_queue(q)
+    end
+  end
+
+  def queue() do
+    let list <- list({term(), term()}) do
+      :queue.from_list(list)
+    end
+  end
+
 end
