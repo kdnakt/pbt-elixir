@@ -126,4 +126,13 @@ defmodule Chap4 do
     end
   end
 
+  property "non empty list" do
+    forall list <- my_non_empty(list(term())) do
+      Enum.count(list) != 0
+    end
+  end
+
+  def my_non_empty(list_type) do
+    such_that l <- list_type, when: l != [] and l != <<>>
+  end
 end
