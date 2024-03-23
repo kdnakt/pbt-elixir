@@ -135,4 +135,14 @@ defmodule Chap4 do
   def my_non_empty(list_type) do
     such_that l <- list_type, when: l != [] and l != <<>>
   end
+
+  property "non empty map" do
+    forall map <- my_non_empty_map(map(term(), term())) do
+      map_size(map) != 0
+    end
+  end
+
+  def my_non_empty_map(gen) do
+    such_that g <- gen, when: g != %{}
+  end
 end
