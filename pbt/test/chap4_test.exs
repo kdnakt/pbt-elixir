@@ -155,4 +155,13 @@ defmodule Chap4 do
   def my_even1(), do: such_that n <- integer(), when: rem(n, 2) == 0
   def my_uneven1(), do: such_that n <- integer(), when: rem(n, 2) != 0
 
+  property "even and uneven 2" do
+    forall {n, m} <- {my_even2(), my_uneven2()} do
+      rem(n - m, 2) != 0
+    end
+  end
+
+  def my_even2(), do: let n <- integer(), do: n * 2
+  def my_uneven2(), do: let n <- integer(), do: n * 2 + 1
+
 end
