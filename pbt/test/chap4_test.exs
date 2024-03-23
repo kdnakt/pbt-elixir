@@ -145,4 +145,14 @@ defmodule Chap4 do
   def my_non_empty_map(gen) do
     such_that g <- gen, when: g != %{}
   end
+
+  property "even and uneven" do
+    forall {n, m} <- {my_even1(), my_uneven1()} do
+      rem(n - m, 2) != 0
+    end
+  end
+
+  def my_even1(), do: such_that n <- integer(), when: rem(n, 2) == 0
+  def my_uneven1(), do: such_that n <- integer(), when: rem(n, 2) != 0
+
 end
