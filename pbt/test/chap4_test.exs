@@ -184,4 +184,25 @@ defmodule Chap4 do
       to_string(l)
     end
   end
+
+  property "mostly sorted list" do
+    forall list <- non_empty(mostly_sorted()) do
+      Enum.count(list) != 0
+    end
+  end
+
+  def mostly_sorted() do
+    gen = list(
+      frequency([
+        {5, sorted_list()},
+        {1, list()}
+      ])
+    )
+    let lists <- gen, do: Enum.concat(lists)
+  end
+
+  def sorted_list() do
+    let l <- list(), do: Enum.sort(l)
+  end
+
 end
