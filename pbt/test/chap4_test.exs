@@ -164,4 +164,24 @@ defmodule Chap4 do
   def my_even2(), do: let n <- integer(), do: n * 2
   def my_uneven2(), do: let n <- integer(), do: n * 2 + 1
 
+  property "text like data" do
+    forall text <- text_like() do
+      aggregate(escape(text), classes(text))
+    end
+  end
+
+  def text_like() do
+    let l <-
+          list(
+            frequency([
+              {80, range(?a, ?z)},
+              {10, ?\s},
+              {1, ?\n},
+              {1, oneof([?., ?-, ?!, ??, ?,])},
+              {1, range(?0, ?9)}
+            ])
+          ) do
+      to_string(l)
+    end
+  end
 end
