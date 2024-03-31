@@ -205,4 +205,12 @@ defmodule Chap4 do
     let l <- list(), do: Enum.sort(l)
   end
 
+  property "recursive generator" do
+    forall route <- path() do
+      aggregate(true, route)
+    end
+  end
+
+  def path(), do: list(oneof([:left, :right, :up, :down]))
+
 end
