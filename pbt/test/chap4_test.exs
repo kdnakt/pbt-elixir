@@ -220,26 +220,33 @@ defmodule Chap4 do
   end
 
   def xy_path() do
-    xy_path({0,0}, [], %{{0,0} => :seen}, [])
+    sized(size,
+      xy_path(size, {0,0}, [], %{{0,0} => :seen}, [])
+    )
   end
 
-  def xy_path(_current, acc, _seen, [_,_,_,_]) do
+  def xy_path(0, _current, acc, _seen, _ignore) do
     acc
   end
 
-  def xy_path(current, acc, seen, ignore) do
-    frequency([
-      {1, acc},
-      {15, increase_path(current, acc, seen, ignore)}
-    ])
+  def xy_path(_max, _current, acc, _seen, [_,_,_,_]) do
+    acc
   end
 
-  def increase_path(current, acc, seen, ignore) do
+  def xy_path(max, current, acc, seen, ignore) do
+    increase_path(max, current, acc, seen, ignore)
+    # frequency([
+    #   {1, acc},
+    #   {15, increase_path(current, acc, seen, ignore)}
+    # ])
+  end
+
+  def increase_path(max, current, acc, seen, ignore) do
     let direction <- oneof([:left, :right, :up, :down] -- ignore) do
       new_pos = move(direction, current)
       case seen do
-        %{new_pos: _} -> xy_path(current, acc, seen, [direction|ignore])
-        _ -> xy_path(new_pos, [direction|acc], Map.put(seen, new_pos, :seen), [])
+        %{new_pos: _} -> xy_path(max, current, acc, seen, [direction|ignore])
+        _ -> xy_path(max - 1, new_pos, [direction|acc], Map.put(seen, new_pos, :seen), [])
       end
     end
   end
