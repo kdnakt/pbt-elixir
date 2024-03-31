@@ -205,7 +205,7 @@ defmodule Chap4 do
     let l <- list(), do: Enum.sort(l)
   end
 
-  property "recursive generator" do
+  property "simple generator" do
     forall route <- path() do
       aggregate(true, route)
     end
@@ -213,4 +213,39 @@ defmodule Chap4 do
 
   def path(), do: list(oneof([:left, :right, :up, :down]))
 
+  property "recursive generator" do
+    forall route <- xy_path() do
+      aggregate(true, route)
+    end
+  end
+
+  def xy_path() do
+    xy_path({0,0}, [], %{{0,0} => :seen}, [])
+  end
+
+  def xy_path(_current, acc, _seen, [_,_,_,_]) do
+    acc
+  end
+
+  def xy_path(current, acc, seen, ignore) do
+    frequency([
+      {1, acc},
+      {15, increase_path(current, acc, seen, ignore)}
+    ])
+  end
+
+  def increase_path(current, acc, seen, ignore) do
+    let direction <- oneof([:left, :right, :up, :down] -- ignore) do
+      new_pos = move(direction, current)
+      case seen do
+        %{new_pos: _} -> xy_path(current, acc, seen, [direction|ignore])
+        _ -> xy_path(new_pos, [direction|acc], Map.put(seen, new_pos, :seen), [])
+      end
+    end
+  end
+
+  def move(:left, {x, y}), do: {x-1, y}
+  def move(:right, {x, y}), do: {x+1, y}
+  def move(:up, {x, y}), do: {x, y+1}
+  def move(:down, {x, y}), do: {x, y-1}
 end
