@@ -296,5 +296,20 @@ defmodule Chap4 do
     )
   end
 
+  property "tree" do
+    forall tree <- tree() do
+        aggregate(true, tree)
+    end
+  end
+
+  def tree(), do: tree(term())
+  def tree(type) do
+    frequency([
+      {1, {:node, type, tree(type), nil}},
+      {1, {:node, type, nil, tree(type)}},
+      {5, {:node, type, tree(type), tree(type)}}
+    ])
+  end
+
 end
 
