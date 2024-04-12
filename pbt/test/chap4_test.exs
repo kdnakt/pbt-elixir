@@ -312,5 +312,26 @@ defmodule Chap4 do
     ])
   end
 
+  property "limited tree" do
+    forall tree <- limited_tree() do
+      aggregate(true, tree)
+    end
+  end
+
+  def limited_tree(), do: limited_tree(term())
+  def limited_tree(type) do
+    sized(size, limited_tree(size, type))
+  end
+  def limited_tree(size, type) when size <= 1, do: {:node, type, nil, nil}
+  def limited_tree(size, type) do
+    frequency([
+      {1, {:node, type, lazy(limited_tree(size - 1, type)), nil}},
+      {1, {:node, type, nil, lazy(limited_tree(size - 1, type))}},
+      {5, {:node, type,
+           lazy(limited_tree(div(size, 2), type)),
+           lazy(limited_tree(div(size, 2), type))
+      }},
+    ])
+  end
 end
 
