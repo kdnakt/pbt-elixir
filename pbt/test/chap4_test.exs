@@ -305,9 +305,10 @@ defmodule Chap4 do
   def tree(), do: tree(term())
   def tree(type) do
     frequency([
-      {1, {:node, type, tree(type), nil}},
-      {1, {:node, type, nil, tree(type)}},
-      {5, {:node, type, tree(type), tree(type)}}
+      {3, {:node, type, nil, nil}},
+      {2, {:node, type, lazy(tree(type)), nil}},
+      {2, {:node, type, nil, lazy(tree(type))}},
+      {3, {:node, type, lazy(tree(type)), lazy(tree(type))}}
     ])
   end
 
