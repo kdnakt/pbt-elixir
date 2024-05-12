@@ -1,4 +1,17 @@
 
+def csv_source() do
+  let size <- pos_integer() do
+    let keys <- header(size) do
+      list(entry(size, keys))
+    end
+  end
+end
+
+def entry(size, keys) do
+  let vals <- record(size) do
+    Map.new(Enum.zip(keys, vals))
+  end
+end
 
 def header(size) do
   vector(size, name())
