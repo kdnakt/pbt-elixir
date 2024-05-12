@@ -38,7 +38,7 @@ defmodule CsvTest do
     oneof([unquoted_text(), quotable_text()])
   end
 
-  def unquoated_text() do
+  def unquoted_text() do
     let chars <- list(elements(textdata())) do
       to_string(chars)
     end
