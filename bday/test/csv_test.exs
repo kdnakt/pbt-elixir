@@ -54,4 +54,11 @@ defmodule CsvTest do
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' ++
      ':;<=>?@ !#$%&\'()*+-./[\\]fi_`{|}~'
   end
+
+  test "one record one line" do
+    assert [%{"aaa" => "zzz", "bbb" => "yyy", "ccc" => "xxx"}] ==
+           Bday.Csv.decode("aaa,bbb,ccc\r\nzzz,yyy,xxx\r\n")
+  end
+
 end  
+
