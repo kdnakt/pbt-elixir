@@ -60,5 +60,14 @@ defmodule CsvTest do
            Bday.Csv.decode("aaa,bbb,ccc\r\nzzz,yyy,xxx\r\n")
   end
 
-end  
+  test "optional crlf at the end of line" do
+    assert [%{"aaa" => "zzz", "bbb" => "yyy", "ccc" => "xxx"}] ==
+           Bday.Csv.decode("aaa,bbb,ccc\r\nzzz,yyy,xxx")
+  end
+
+  test "double quote" do
+    assert [%{"aaa" => "zzz", "bbb" => "yyy", "ccc" => "xxx"}] ==
+           Bday.Csv.decode("\"aaa\",\"bbb\",\"ccc\"\r\nzzz,yyy,xxx")
+  end
+end
 
