@@ -92,12 +92,12 @@ defmodule FilterTest do
     end
   end
 
-  defp person_for_date(%Date{montj: m, day: d} = date) do
+  defp person_for_date(%Date{month: m, day: d} = date) do
     case Date.new(:rand.uniform(100) + 1900, m, d) do
       {:error, :invalid_date} ->
         person_for_date(date)
       {:ok, date} ->
-        ${"name" => make_ref(), "date_of_birth" => date}
+        %{"name" => make_ref(), "date_of_birth" => date}
     end
   end
 end
