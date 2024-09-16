@@ -37,7 +37,11 @@ defmodule FilterTest do
   defp on_right_date(_people, birthdays) do
     for {date, found} <- birthdays do
       for %{"date_of_birth" => dob} <- found do
-        assert {date.month, date.day} == {dob.month, dob.day}
+        case Date.new(date.year, dob.month, dob.day) do
+          # Unfortunately Feb 29 doesn't exist this year ...
+          {:error, :invalid_date} -> :skip
+          _ -> assert {date.month, date.day} == {dob.month, dob.day}
+        end
       end
     end
   end
