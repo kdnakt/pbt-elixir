@@ -21,6 +21,28 @@ defmodule FilterTest do
     [{day, found} | find_birthdays_for_year(people, year)]
   end
 
+  # Assertions
+  defp every_birthday_once(people, birthdays) do
+    found =
+      birthdays
+      |> Enum.flat_map(fn {_, found} -> found end)
+      |> Enum.sort()
+
+    not_found = people -- found
+    found_many_times = found -- Enum.uniq(found)
+    assert [] == not_found
+    assert [] == found_many_times
+  end
+
+  defp on_right_date(_people, birthdays) do
+    for {date, found} <- birthdays do
+      for %{"date_of_birth" => dob} <- found do
+        assert {date.month, date.day} == {dob.month, dob.day}
+      end
+    end
+  end
+
+
   # generators
   defp generate_years_data(stop, stop), do: []
 
