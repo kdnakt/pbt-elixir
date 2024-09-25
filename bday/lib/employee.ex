@@ -18,10 +18,12 @@ defmodule Bday.Employee do
   
   defp adapt_csv_result(map) do
     for {k, v} <- map, into: %{} do
-      {trim(k), trim(v)}
+      {trim(k), maybe_null(trim(v))}
     end
   end
   
   defp trim(str), do: String.trim_leading(str, " ")
 
+  defp maybe_null(""), do: nil
+  defp maybe_null(str), do: str
 end
