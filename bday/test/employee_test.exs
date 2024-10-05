@@ -14,6 +14,17 @@ defmodule EmployeeTest do
     end
   end
 
+  property "date formatted properly" do
+    forall map <- raw_employee_map() do
+      case Employee.adapt_csv_result_shim(map) do
+        %{"date_of_birth" => %Date{}} ->
+          true
+        _ ->
+          false
+      end
+    end
+  end
+
   property "access from handler" do
     forall maps <- non_empty(list(raw_employee_map())) do
       handle =
