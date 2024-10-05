@@ -1,9 +1,9 @@
-
+Code.require_file("csv_test.exs", __DIR__)
 
 defmodule EmployeeTest do
   use ExUnit.Case
   use PropCheck
-  
+
   property "fixed leading space" do
     forall map <- raw_employee_map() do
       emp = Employee.adapt_csv_result_shim(map)

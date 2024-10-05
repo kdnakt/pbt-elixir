@@ -1,6 +1,7 @@
 defmodule CsvTest do
   use ExUnit.Case
   use PropCheck
+  alias Bday.Csv, as: Csv
 
   property "encode and decode csv" do
     forall maps <- csv_source() do
@@ -70,4 +71,3 @@ defmodule CsvTest do
            Bday.Csv.decode("\"aaa\",\"bbb\",\"ccc\"\r\nzzz,yyy,xxx")
   end
 end
-
