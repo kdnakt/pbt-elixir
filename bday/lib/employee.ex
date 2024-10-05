@@ -49,4 +49,12 @@ defmodule Bday.Employee do
   @spec email(employee()) :: String.t()
   def email(%{"email" => email}), do: email
 
+  @spec fetch(handle()) :: [employee()]
+  def fetch({:raw, maps}), do: maps
+
+  @spec filter_birthday(handle(), Date.t()) :: handle()
+  def filter_birthday({:raw, employees}, date) do
+    {:raw, Bday.Filter.birthday(employees, date)}
+  end
+
 end
