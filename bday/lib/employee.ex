@@ -36,4 +36,17 @@ defmodule Bday.Employee do
     {:ok, date} = Date.new(y, m, d)
     date
   end
+
+  @spec last_name(employee()) :: String.t() | nil
+  def last_name(%{"last_name" => name}), do: name
+
+  @spec first_name(employee()) :: String.t() | nil
+  def first_name(%{"first_name" => name}), do: name
+
+  @spec date_of_birth(employee()) :: Date.t()
+  def date_of_birth(%{"date_of_birth" => dob}), do: dob
+
+  @spec email(employee()) :: String.t()
+  def email(%{"email" => email}), do: email
+
 end
