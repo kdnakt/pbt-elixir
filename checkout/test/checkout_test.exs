@@ -8,6 +8,13 @@ defmodule CheckoutTest do
     end
   end
 
+  property "no special (w/metrics)" do
+    forall {item_list, expected_price, price_list} <- item_price_list() do
+      (expected_price == Checkout.total(item_list, price_list, []))
+      |> collect(bucket(length(item_list), 10))
+    end
+  end
+
   ## generators
   defp item_price_list() do
     let price_list <- price_list() do
@@ -33,5 +40,10 @@ defmodule CheckoutTest do
     let {item, price} <- elements(price_list) do
       item_list(n - 1, price_list, {[item | item_acc], price + price_acc})
     end
+  end
+
+  ## helpers
+  defp bucket(n, unit) do
+    div(n, unit) * unit
   end
 end
