@@ -63,6 +63,52 @@ defmodule CheckoutTest do
     end
   end
 
+  defp special_list(price_list) do
+    items = for {name, _} <- price_list, do: name
+
+    let specials <- list({elements(items), choose(2, 5), integer()}) do
+      sorted = Enum.sort(specials)
+      Enum.dedup_by(sorted, fn {x, _, _} -> x end)
+    end
+  end
+
+  defp regular_gen(price_list, special_list) do
+    regular_gen(price_list, special_list, [], 0)
+  end
+
+  defp regular_gen([], _, list, price), do: {list, price}
+  defp regular_gen([{item, cost} | prices], specials, items, price) do
+    count_gen =
+      case List.keyfind(specials, item, 0) do
+        {_, limit, _} -> choose(0, limit - 1)
+        _ -> non_neg_integer()
+      end
+
+    let count <- count_gen do
+      regular_gen(
+        prices,
+        specials,
+        let(v <- vector(count, item), do: v ++ items),
+        cost * count + price
+      )
+    end
+  end
+
+  defp special_gen(_, special_list) do
+    special_gen(special_list, [], 0)
+  end
+
+  defp special_gen([], items, price), do: {items, price}
+  defp special_gen([{item, count, cost} | specials], items, price) do
+    let multiplier <- non_neg_integer() do
+      special_gen(
+        specials,
+        let(v <- vector(count * multiplier, item), do: v ++ items),
+        cost * multiplier + price
+      )
+    end
+  end
+
   ## helpers
   defp bucket(n, unit) do
     div(n, unit) * unit
