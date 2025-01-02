@@ -15,6 +15,13 @@ defmodule CheckoutTest do
     end
   end
 
+  property "sum with special" do
+    forall {items, expected_price, prices, specials}
+           <- item_price_special() do
+      expected_price == Checkout.total(items, prices, specials)
+    end
+  end
+
   ## generators
   defp item_price_list() do
     let price_list <- price_list() do
@@ -39,6 +46,20 @@ defmodule CheckoutTest do
   defp item_list(n, price_list, {item_acc, price_acc}) do
     let {item, price} <- elements(price_list) do
       item_list(n - 1, price_list, {[item | item_acc], price + price_acc})
+    end
+  end
+
+  defp item_price_special() do
+    let price_list <- price_list() do
+      let special_list <- special_list(price_list) do
+        let {{regular_items, regular_expected},
+             {special_items, special_expected}} <-
+              {regular_gen(price_list, special_list),
+               special_gen(price_list, special_list)} do
+          {Enum.shuffle(regular_items ++ special_items),
+           regular_expected + special_expected, price_list, special_list}
+        end
+      end
     end
   end
 
