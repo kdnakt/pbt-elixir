@@ -22,6 +22,19 @@ defmodule CheckoutTest do
     end
   end
 
+  property "negative testing for expected results" do
+    forall {items, prices, specials} <- lax_lists() do
+      try do
+        is_integer(Checkout.total(items, prices, specials))
+      rescue
+        e in [RuntimeError] ->
+          String.starts_with?(e.message, "unknown item:")
+        _ ->
+          false
+      end
+    end
+  end
+
   ## generators
   defp item_price_list() do
     let price_list <- price_list() do
@@ -112,5 +125,11 @@ defmodule CheckoutTest do
   ## helpers
   defp bucket(n, unit) do
     div(n, unit) * unit
+  end
+
+  defp lax_lists() do
+    {list(utf8()),
+     list({utf8(), integer()}),
+     list({utf8(), integer(), integer()})}
   end
 end
