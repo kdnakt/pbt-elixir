@@ -24,14 +24,15 @@ defmodule CheckoutTest do
 
   property "negative testing for expected results" do
     forall {items, prices, specials} <- lax_lists() do
-      try do
-        is_integer(Checkout.total(items, prices, specials))
-      rescue
-        e in [RuntimeError] ->
-          String.starts_with?(e.message, "unknown item:")
-        _ ->
-          false
-      end
+      collect(item_list_type(items, prices),
+        try do
+          is_integer(Checkout.total(items, prices, specials))
+        rescue
+          e in [RuntimeError] ->
+            String.starts_with?(e.message, "unknown item:")
+          _ ->
+            false
+        end)
     end
   end
 
@@ -131,5 +132,16 @@ defmodule CheckoutTest do
     {list(utf8()),
      list({utf8(), integer()}),
      list({utf8(), integer(), integer()})}
+  end
+
+  defp item_list_type(items, prices) do
+    Enum.all?(items, fn x -> has_price(x, prices) end)
+  end
+
+  defp has_price(item, prices) do
+    case List.keyfind(prices, item, 0) do
+      nil -> false
+      _ -> true
+    end
   end
 end
