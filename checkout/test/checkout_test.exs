@@ -29,7 +29,8 @@ defmodule CheckoutTest do
           is_integer(Checkout.total(items, prices, specials))
         rescue
           e in [RuntimeError] ->
-            String.starts_with?(e.message, "unknown item:")
+            e.message == "invalid list of specials" ||
+              String.starts_with?(e.message, "unknown item:")
           _ ->
             false
         end)
@@ -129,9 +130,12 @@ defmodule CheckoutTest do
   end
 
   defp lax_lists() do
-    {list(utf8()),
-     list({utf8(), integer()}),
-     list({utf8(), integer(), integer()})}
+    known_items = ["A", "B", "C"]
+    maybe_known_item_gen = elements(known_items ++ [utf8()])
+
+    {list(maybe_known_item_gen),
+     list({maybe_known_item_gen, integer()}),
+     list({maybe_known_item_gen, integer(), integer()})}
   end
 
   defp item_list_type(items, prices) do

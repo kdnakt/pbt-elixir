@@ -3,7 +3,15 @@ defmodule Checkout do
   Documentation for `Checkout`.
   """
 
+  def valid_special_list(list) do
+    Enum.all?(list, fn {_, x, _} -> x != 0 end)
+  end
+
   def total(item_list, price_list, specials) do
+    if not valid_special_list(specials) do
+      raise RuntimeError, message: "invalid list of specials"
+    end
+
     counts = count_seen(item_list)
     {counts_left, prices} = apply_specials(counts, specials)
     prices + apply_regular(counts_left, price_list)
@@ -45,7 +53,7 @@ defmodule Checkout do
   defp cost_of_item(price_list, name) do
     case List.keyfind(price_list, name, 0) do
       nil ->
-        raise("unknown item:" + name)
+        raise RuntimeError, message: "unknown item:" + name
       {_, price} ->
         price
     end
