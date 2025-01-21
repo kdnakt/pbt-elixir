@@ -3,6 +3,11 @@ defmodule Checkout do
   Documentation for `Checkout`.
   """
 
+  def valid_price_list(list) do
+    sorted = Enum.sort(list)
+    length(list) == length(Enum.dedup_by(sorted, fn {x, _} -> x end))
+  end
+
   def valid_special_list(list) do
     Enum.all?(list, fn {_, x, _} -> x != 0 end)
   end

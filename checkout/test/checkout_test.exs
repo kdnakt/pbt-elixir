@@ -37,6 +37,12 @@ defmodule CheckoutTest do
     end
   end
 
+  property "duplicated list" do
+    forall price_list <- dupe_list() do
+      false == Checkout.valid_price_list(price_list)
+    end
+  end
+
   ## generators
   defp item_price_list() do
     let price_list <- price_list() do
@@ -121,6 +127,12 @@ defmodule CheckoutTest do
         let(v <- vector(count * multiplier, item), do: v ++ items),
         cost * multiplier + price
       )
+    end
+  end
+
+  defp dupe_list() do
+    let items <- non_empty(list(utf8())) do
+      vector(length(items) + 1, {elements(items), integer()})
     end
   end
 
