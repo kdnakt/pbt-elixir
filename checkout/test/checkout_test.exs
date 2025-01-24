@@ -30,6 +30,7 @@ defmodule CheckoutTest do
         rescue
           e in [RuntimeError] ->
             e.message == "invalid list of specials" ||
+              e.message == "invalid list of prices" ||
               String.starts_with?(e.message, "unknown item:")
           _ ->
             false
