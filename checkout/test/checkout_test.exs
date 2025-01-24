@@ -44,6 +44,12 @@ defmodule CheckoutTest do
     end
   end
 
+  property "dupe special list" do
+    forall special_list <- dupe_special_list() do
+      false == Checkout.valid_special_list(special_list)
+    end
+  end
+
   ## generators
   defp item_price_list() do
     let price_list <- price_list() do
@@ -134,6 +140,12 @@ defmodule CheckoutTest do
   defp dupe_list() do
     let items <- non_empty(list(utf8())) do
       vector(length(items) + 1, {elements(items), integer()})
+    end
+  end
+
+  defp dupe_special_list() do
+    let items <- non_empty(list(utf8())) do
+      vector(length(items) + 1, {elements(items), integer(), integer()})
     end
   end
 

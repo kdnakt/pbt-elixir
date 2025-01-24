@@ -9,7 +9,10 @@ defmodule Checkout do
   end
 
   def valid_special_list(list) do
-    Enum.all?(list, fn {_, x, _} -> x != 0 end)
+    sorted = Enum.sort(list)
+
+    Enum.all?(list, fn {_, x, _} -> x != 0 end) &&
+      length(list) == length(Enum.dedup_by(sorted, fn {x, _, _} -> x end))
   end
 
   def total(item_list, price_list, specials) do
