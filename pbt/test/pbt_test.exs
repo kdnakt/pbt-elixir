@@ -121,4 +121,13 @@ defmodule PbtTest do
     :io_lib.format(format_str, [y, m, d, h, mi, s, sign, ho, mo])
     |> to_string()
   end
+
+  def tree(n) when n <= 1 do
+    {:leaf, number()}
+  end
+
+  def tree(n) do
+    per_branch = div(n, 2)
+    {:branch, tree(per_branch), tree(per_branch)}
+  end
 end
