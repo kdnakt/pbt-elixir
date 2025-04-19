@@ -80,12 +80,17 @@ defmodule CheckoutTest do
   defp item_price_special() do
     let price_list <- price_list() do
       let special_list <- special_list(price_list) do
-        let {{regular_items, regular_expected},
-             {special_items, special_expected}} <-
-              {regular_gen(price_list, special_list),
-               special_gen(price_list, special_list)} do
-          {Enum.shuffle(regular_items ++ special_items),
-           regular_expected + special_expected, price_list, special_list}
+        let {items, price} <-
+            (let_shrink([
+                {regular_items, regular_expected} <-
+                  regular_gen(price_list, special_list),
+                {special_items, special_expected} <-
+                  special_gen(price_list, special_list)
+              ]) do
+                {regular_items ++ special_items,
+                 regular_expected + special_expected}
+              end) do
+          {items, price, price_list, special_list}
         end
       end
     end
