@@ -130,4 +130,19 @@ defmodule PbtTest do
     per_branch = div(n, 2)
     {:branch, tree(per_branch), tree(per_branch)}
   end
+
+  def tree_shrink(n) when n <= 1 do
+    {:leaf, number()}
+  end
+
+  def tree_shrink(n) do
+    per_branch = div(n, 2)
+
+    let_shrink([
+      left <- tree_shrink(per_branch),
+      right <- tree_shrink(per_branch)
+    ]) do
+      {:branch, left, right}
+    end
+  end
 end
