@@ -145,4 +145,33 @@ defmodule PbtTest do
       {:branch, left, right}
     end
   end
+
+  property "dairy" do
+    forall food <- meal() do
+      dairy_count(food) == 0
+    end
+  end
+
+  def meal() do
+    let_shrink([
+      appetizer <- [elements([:soup, :salad, :cheesesticks])],
+      drink <- [elements([:water, :soda, :milk])],
+      entree <- [elements([:steak, :chicken, :lasagna])],
+      dessert <- [elements([:cake, :icecream, :pie])]
+    ]) do
+      appetizer ++ drink ++ entree ++ dessert
+    end
+  end
+
+  def dairy_count(list) do
+    length(
+      Enum.filter(list, fn
+        :milk -> true
+        :cheesesticks -> true
+        :icecream -> true
+        :lasagna -> true
+        _ -> false
+      end)
+    )
+  end
 end
