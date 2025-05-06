@@ -1,6 +1,7 @@
 defmodule TargetTest do
   use ExUnit.Case
-  use PropCheck
+  # cf.) https://github.com/ksaaskil/introduction-to-property-based-testing/blob/master/elixir-propcheck/test/tpbt_test.exs
+  use PropCheck, default_opts: [numtests: 100, search_steps: 100]
 
   property "always works" do
     forall type <- term() do
@@ -14,10 +15,12 @@ defmodule TargetTest do
 
   property "path" do
     forall_targeted p <- path() do
-      result = Enum.reduce(p, {0, 0}, fn direction, {x, y} ->
+      {x, y} = Enum.reduce(p, {0, 0}, fn direction, {x, y} ->
         move(direction, {x, y})
       end)
-      IO.inspect(result)
+      neg_loss = x - y
+      IO.puts("x: #{x}, y: #{y} neg_loss: #{neg_loss}")
+      maximize(neg_loss)
       true
     end
   end
