@@ -60,6 +60,16 @@ defmodule TargetTest do
     end
   end
 
+  property "tree search" do
+    forall l <- list(integer()) do
+      not_exists t <- user_nf(let(x <- l, do: to_tree(x)), next_tree()) do
+        {left, right} = sides(t)
+        maximize(left - right)
+        false # NOT_EXISTSがパスしないように
+      end
+    end
+  end
+
   def next_tree() do
     fn old_tree, {_, t} ->
       let n <- integer() do
