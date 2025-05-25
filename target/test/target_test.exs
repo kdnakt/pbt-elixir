@@ -79,4 +79,20 @@ defmodule TargetTest do
 
   def count_inner({:node, _, _, _}), do: 1
   def count_inner(_), do: 0
+
+  property "example" do
+    forall_targeted v <- user_nf(list(integer()), next_list()) do
+      some_check(v)
+    end
+  end
+
+  defp next_list() do
+    fn prev_value, {depth, current_temperature} ->
+      let(v <- some_generator(), do: modify(v, prev_value))
+    end
+  end
+  # Mocked function for user_nf
+  defp some_generator(), do: integer()
+  defp modify(v, prev_value), do: v
+  defp some_check(v), do: true
 end
