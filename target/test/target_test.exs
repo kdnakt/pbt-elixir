@@ -50,6 +50,24 @@ defmodule TargetTest do
     end
   end
 
+  property "tree neighbor" do
+    forall_targeted t <- user_nf(tree(), next_tree()) do
+      weight = sides(t)
+      {left, right} = weight
+      IO.puts("left: #{left}, right: #{right}, weight:#{inspect(weight)}")
+      maximize(left - right)
+      true
+    end
+  end
+
+  def next_tree() do
+    fn old_tree, {_, t} ->
+      let n <- integer() do
+        insert(trunc(n * t * 100), old_tree)
+      end
+    end
+  end
+
   def tree() do
     let l <- non_empty(list(integer())) do
       to_tree(l)
