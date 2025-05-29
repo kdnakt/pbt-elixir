@@ -1,7 +1,7 @@
 defmodule TargetTest do
   use ExUnit.Case
   # cf.) https://github.com/ksaaskil/introduction-to-property-based-testing/blob/master/elixir-propcheck/test/tpbt_test.exs
-  use PropCheck, default_opts: [numtests: 1000, search_steps: 100]
+  use PropCheck, default_opts: [:noshrink, numtests: 1000, search_steps: 100]
 
   property "always works" do
     forall type <- term() do
@@ -150,6 +150,16 @@ defmodule TargetTest do
     forall_targeted l <- my_list() do
       t0 = System.monotonic_time(:millisecond)
       Enum.sort(l)
+      t1 = System.monotonic_time(:millisecond)
+      maximize(t1 - t0)
+      t1 - t0 < 5000
+    end
+  end
+
+  property "quicksort time" do
+    forall_targeted l <- my_list() do
+      t0 = System.monotonic_time(:millisecond)
+      sort(l)
       t1 = System.monotonic_time(:millisecond)
       maximize(t1 - t0)
       t1 - t0 < 5000
