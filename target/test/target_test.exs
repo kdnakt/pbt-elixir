@@ -145,4 +145,14 @@ defmodule TargetTest do
   def my_list() do
     such_that l <- list(integer()), when: length(l) < 100000
   end
+
+  property "mergesort time" do
+    forall_targeted l <- user_nf(my_list(), next_list()) do
+      t0 = System.monotonic_time(:millisecond)
+      Enum.sort(l)
+      t1 = System.monotonic_time(:millisecond)
+      maximize(t1 - t0)
+      t1 - t0 < 5000
+    end
+  end
 end
