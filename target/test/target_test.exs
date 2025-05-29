@@ -147,7 +147,7 @@ defmodule TargetTest do
   end
 
   property "mergesort time" do
-    forall_targeted l <- user_nf(my_list(), next_list()) do
+    forall_targeted l <- my_list() do
       t0 = System.monotonic_time(:millisecond)
       Enum.sort(l)
       t1 = System.monotonic_time(:millisecond)
