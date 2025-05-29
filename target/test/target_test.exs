@@ -123,4 +123,14 @@ defmodule TargetTest do
   defp some_generator(), do: integer()
   defp modify(v, prev_value), do: v
   defp some_check(v), do: true
+
+  # Quicksort
+  def sort([]), do: []
+  def sort([pivot|tail]) do
+    first = for x <- tail, x < pivot, do: x
+    second = for x <- tail, x >= pivot, do: x
+    sort(first)
+    ++ [pivot] ++
+    sort(second)
+  end
 end
