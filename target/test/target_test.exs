@@ -168,7 +168,7 @@ defmodule TargetTest do
 
   def sort_fixed([]), do: []
   def sort_fixed(l) do
-    n = Enum.random(length(l))
+    n = Enum.random(1..length(l))
     pivot = Enum.at(l, n)
     first = for x <- l, x < pivot, do: x
     middle = for x <- l, x == pivot, do: x
