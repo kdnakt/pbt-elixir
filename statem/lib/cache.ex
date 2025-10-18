@@ -42,4 +42,9 @@ defmodule Cache do
     end
   end
 
+  def flush() do
+    [{:count, _, max}] = :ets.lookup(:cache, :count)
+    :ets.delete_all_objects(:cache)
+    :ets.insert(:cache, {:count, 0, max})
+  end
 end
