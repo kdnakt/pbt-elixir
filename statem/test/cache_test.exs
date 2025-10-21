@@ -25,6 +25,28 @@ defmodule CacheTest do
     end
   end
 
+  property "parallel stateful property", numtests: 10000 do
+    forall cmds <- parallel_commands(__MODULE__) do
+      Cache.start_link(@cache_size)
+      {history, state, result} = run_parallel_commands(__MODULE__, cmds)
+      Cache.stop()
+
+      (result == :ok)
+      |> aggregate(command_names(cmds))
+      |> when_fail(
+        IO.puts("""
+        =======
+        Failing command sequence
+        #{inspect(cmds, pretty: true)}
+        At state: #{inspect(state, pretty: true)}
+        =======
+        Result: #{inspect(result, pretty: true)}
+        History: #{inspect(history, pretty: true)}
+        """)
+      )
+    end
+  end
+
   defmodule State do
     @cache_size 10
     defstruct max: @cache_size, count: 0, entries: []
