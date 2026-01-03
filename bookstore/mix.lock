@@ -1,0 +1,7 @@
+%{
+  "eql": {:hex, :eql, "0.1.2", "c95d7e9635a914a9c70983129f4d86dc5da70877f39f01785c274da35be45ad4", [:rebar3], [], "hexpm", "3b1a85c491d44262802058c0de97a2c90678d5d45851b88a076b1a45a8d6d4b3"},
+  "libgraph": {:hex, :libgraph, "0.16.0", "3936f3eca6ef826e08880230f806bfea13193e49bf153f93edcf0239d4fd1d07", [:mix], [], "hexpm", "41ca92240e8a4138c30a7e06466acc709b0cbb795c643e9e17174a178982d6bf"},
+  "pgsql": {:hex, :pgsql, "26.0.2", "0b77a5f7714aa1eea7756ef03d5f6b08455208836431dd9bbdd1f9a97fbec947", [:rebar3], [], "hexpm", "1ac82169f4db548dd5ec85299c1d4c3a83b75862f067aec15e463c4dca004038"},
+  "propcheck": {:hex, :propcheck, "1.5.0", "df6f554a97eba4f92c3e4bc7758c8480e8bc401188af32cfe09641e81d8a55ba", [:mix], [{:libgraph, "~> 0.13", [hex: :libgraph, repo: "hexpm", optional: false]}, {:proper, "~> 1.5", [hex: :proper, repo: "hexpm", optional: false]}], "hexpm", "3388aa7909277faed166dfced39fad6ecae3c3be064352d37646be459fc80e09"},
+  "proper": {:hex, :proper, "1.5.0", "4a87ce8b219858e64c9aa015f4f7ed739d0ac3ca6bfd77fa62794617ee784225", [:rebar3], [], "hexpm", "fbf7cf0625e5441a314514f7d8e1eaff52090fcd94ff34b5171ff293d3f9969a"},
+}

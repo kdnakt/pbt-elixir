@@ -1,4 +1,14 @@
 defmodule Bookstore.DB do
+
+  def load_queries do
+    :ets.new(:bookstore_sql, [:named_table, :public, {:read_concurrency, true}])
+
+    sql_file = Path.join(:code.priv_dir(:bookstore), "queries.sql")
+    {:ok, queries} = :eql.compile(sql_file)
+    :ets.insert(:bookstore_sql, queries)
+    :ok
+  end
+
   def setup do
     run_query(:setup_table_books, [])
   end
@@ -69,6 +79,13 @@ defmodule Bookstore.DB do
   end
   defp close(conn) do
     :pgsql_connection.close(conn)
+  end
+
+  defp query(name) do
+    case :ets.lookup(:bookstore_sql, name) do
+      [] -> {:query_not_found, name}
+      [{_, query}] -> query
+    end
   end
 
   defp handle_select({{:select, _}, list}), do: {:ok, list}
