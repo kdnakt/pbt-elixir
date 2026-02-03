@@ -14,9 +14,25 @@ defmodule BookstoreTest do
     end
   end
 
+  def title(s) do
+    elements(for {_,title,_,_,_} <- Map.values(s), do: partial(title))
+  end
+
   def author() do
     let s <- utf8() do
       elements([s, String.to_charlist(s)])
+    end
+  end
+
+  def author(s) do
+    elements(for {_,_,author,_,_} <- Map.values(s), do: partial(author))
+  end
+
+  def partial(string) do
+    string = IO.chardata_to_string(string)
+    l = String.length(string)
+    let {start, len} <- {range(0, l), non_neg_integer()} do
+      String.slice(string, start, len)
     end
   end
 
@@ -31,6 +47,8 @@ defmodule BookstoreTest do
       to_string(Enum.join(isbn, "-"))
     end
   end
+
+  def isbn(state), do: elements(Map.keys(state))
 
   def initial_state(), do: %{}
 
