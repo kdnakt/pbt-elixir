@@ -113,6 +113,25 @@ defmodule BookstoreTest do
     true
   end
 
+  def next_state(
+    state,
+    _,
+    {:call, _, :add_book_new, [isbn, title, author, total, avail]}
+  ) do
+    Map.put(state, isbn, {isbn, title, author, total, avail})
+  end
+  def next_state(state, _, {:call, _, :add_copy_existing, [isbn]}) do
+    {isbn, title, author, owned, avail} = state[isbn]
+    Map.put(state, isbn, {isbn, title, author, owned + 1, avail + 1})
+  end
+  def next_state(state, _, {:call, _, :borrow_copy_avail, [isbn]}) do
+    {isbn, title, author, owned, avail} = state[isbn]
+    Map.put(state, isbn, {isbn, title, author, owned, avail - 1})
+  end
+  def next_state(state, _, {:call, _, :return_copy_existing, [isbn]}) do
+    {isbn, title, author, owned, avail} = state[isbn]
+    Map.put(state, isbn, {isbn, title, author, owned, avail + 1})
+  end
   def next_state(state, _res, {:call, _mod, _fun, _args}) do
     new_state = state
     new_state
