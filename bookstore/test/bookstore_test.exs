@@ -52,7 +52,7 @@ defmodule BookstoreTest do
 
   def initial_state(), do: %{}
 
-  def command(_state) do
+  def command(state) do
     always_possible = [
 
       {:call, BookShim, :add_book_new, [isbn(), title(), author(), 1, 1]}
@@ -109,6 +109,56 @@ defmodule BookstoreTest do
     has_isbn(s, isbn)
   end
 
+  def postcondition(_, {_, _, :add_book_new, _}, :ok) do
+    true
+  end
+  def postcondition(_, {_, _, :add_book_existing, _}, {:error, _}) do
+    true
+  end
+  def postcondition(_, {_, _, :add_copy_existing, _}, :ok) do
+    true
+  end
+  def postcondition(_, {_, _, :add_copy_new, _}, {:error, :not_found}) do
+    true
+  end
+  def postcondition(_, {_, _, :borrow_copy_avail, _}, :ok) do
+    true
+  end
+  def postcondition(_, {_, _, :borrow_copy_unavail, _}, {:error, :unavailable}) do
+    true
+  end
+  def postcondition(_, {_, _, :borrow_copy_unknown, _}, {:error, :not_found}) do
+    true
+  end
+  def postcondition(_, {_, _, :return_copy_full, _}, {:error, _}) do
+    true
+  end
+  def postcondition(_, {_, _, :return_copy_existing, _}, :ok) do
+    true
+  end
+  def postcondition(_, {_, _, :return_copy_unknown, _}, {:error, :not_found}) do
+    true
+  end
+  def postcondition(s, {_, _, :find_book_by_isbn_exists, [isbn]}, res) do
+    res == {:ok, [Map.get(s, isbn, nil)]}
+  end
+  def postcondition(_, {_, _, :find_book_by_isbn_unknown, _}, {:ok, []}) do
+    true
+  end
+  def postcondition(state, {_, _, :find_book_by_author_matching, [auth]}, {:ok, res}) do
+    map = :maps.filter(fn _, {_,_,a,_,_} -> contains?(a, auth) end, state)
+    Enum.sort(res) == Enum.sort(Map.values(map))
+  end
+  def postcondition(_, {_, _, :find_book_by_author_unknown, _}, {:ok, []}) do
+    true
+  end
+  def postcondition(state, {_, _, :find_book_by_title_matching, [title]}, {:ok, res}) do
+    map = :maps.filter(fn _, {_,t,_,_,_} -> contains?(t, title) end, state)
+    Enum.sort(res) == Enum.sort(Map.values(map))
+  end
+  def postcondition(_, {_, _, :find_book_by_title_unknown, _}, {:ok, []}) do
+    true
+  end
   def postcondition(_state, {:call, _mod, _fun, _args}, _res) do
     true
   end
@@ -137,15 +187,15 @@ defmodule BookstoreTest do
     new_state
   end
 
-  def has_isbn?(map, isbn) do
+  def has_isbn(map, isbn) do
     Map.has_key?(map, isbn)
   end
 
-  def like_author?(map, author) do
+  def like_author(map, author) do
     Enum.any?(Map.values(map), fn {_,_,a,_,_} -> contains?(a, author) end)
   end
 
-  def like_title?(map, title) do
+  def like_title(map, title) do
     Enum.any?(Map.values(map), fn {_,t,_,_,_} -> contains?(t, title) end)
   end
 
