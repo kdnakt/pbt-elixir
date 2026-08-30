@@ -159,8 +159,15 @@ defmodule BookstoreTest do
   def postcondition(_, {_, _, :find_book_by_title_unknown, _}, {:ok, []}) do
     true
   end
-  def postcondition(_state, {:call, _mod, _fun, _args}, _res) do
-    true
+  def postcondition(_state, {:call, mod, fun, args}, res) do
+    mod = inspect(mod)
+    fun = inspect(fun)
+    args = inspect(args)
+    res = inspect(res)
+    IO.puts(
+      "\nnon-matching postcondition: {#{mod}, #{fun}, #{args}} -> #{res}"
+    )
+    false
   end
 
   def next_state(
