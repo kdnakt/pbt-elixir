@@ -8,24 +8,26 @@ defmodule BookstoreTest do
     assert Bookstore.hello() == :world
   end
 
-  def title() do
-    let s <- utf8() do
-      elements([s, String.to_charlist(s)])
-    end
-  end
+  def title(), do: friendly_unicode()
 
   def title(s) do
     elements(for {_,title,_,_,_} <- Map.values(s), do: partial(title))
   end
 
-  def author() do
-    let s <- utf8() do
-      elements([s, String.to_charlist(s)])
-    end
-  end
+  def author(), do: friendly_unicode()
 
   def author(s) do
     elements(for {_,_,author,_,_} <- Map.values(s), do: partial(author))
+  end
+
+  def friendly_unicode() do
+    bad_chars = [<<0>>, "\\", "_", "%"]
+    friendly_gen =
+      such_that s <- utf8(), when: (not contains_any?(s, bad_chars)) &&
+        String.length(s) < 256
+    let x <- friendly_gen do
+      elements([x, String.to_charlist(x)])
+    end
   end
 
   def partial(string) do
@@ -210,5 +212,9 @@ defmodule BookstoreTest do
     string = IO.chardata_to_string(string_or_chars_full)
     pattern = IO.chardata_to_string(string_or_char_pattern)
     String.contains?(string, pattern)
+  end
+
+  defp contains_any?(string_or_chars_full, patterns) do
+    Enum.any?(patterns, &contains?(string_or_chars_full, &1))
   end
 end
