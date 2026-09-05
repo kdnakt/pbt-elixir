@@ -108,18 +108,18 @@ defmodule BookstoreTest do
     like_title(s, title)
   end
   def precondition(s, {:call, _, :borrow_copy_avail, [isbn]}) do
-    0 < elem(Map.get(s, isbn), 4)
+    0 < elem(Map.get(s, isbn, {:fake, :fake, :fake, :fake, 0}), 4)
   end
   def precondition(s, {:call, _, :borrow_copy_unavail, [isbn]}) do
-    0 == elem(Map.get(s, isbn), 4)
+    0 == elem(Map.get(s, isbn, {:fake, :fake, :fake, :fake, 0}), 4)
   end
   def precondition(s, {:call, _, :return_copy_full, [isbn]}) do
-    {_, _, _, owned, avail} = Map.get(s, isbn)
-    avail == owned
+    {_, _, _, owned, avail} = Map.get(s, isbn, {:fake, :fake, :fake, 0, 0})
+    avail == owned && owned != 0
   end
   def precondition(s, {:call, _, :return_copy_existing, [isbn]}) do
-    {_, _, _, owned, avail} = Map.get(s, isbn)
-    avail != owned
+    {_, _, _, owned, avail} = Map.get(s, isbn, {:fake, :fake, :fake, 0, 0})
+    avail != owned && owned != 0
   end
   def precondition(s, {:call, _mod, _fun, [isbn|_]}) do
     has_isbn(s, isbn)
