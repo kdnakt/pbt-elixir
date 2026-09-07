@@ -111,7 +111,7 @@ defmodule BookstoreTest do
     0 < elem(Map.get(s, isbn, {:fake, :fake, :fake, :fake, 0}), 4)
   end
   def precondition(s, {:call, _, :borrow_copy_unavail, [isbn]}) do
-    0 == elem(Map.get(s, isbn, {:fake, :fake, :fake, :fake, 0}), 4)
+    0 == elem(Map.get(s, isbn, {:fake, :fake, :fake, :fake, 1}), 4)
   end
   def precondition(s, {:call, _, :return_copy_full, [isbn]}) do
     {_, _, _, owned, avail} = Map.get(s, isbn, {:fake, :fake, :fake, 0, 0})
