@@ -8,6 +8,33 @@ defmodule BookstoreTest do
     assert Bookstore.hello() == :world
   end
 
+  property "bookstore state machine", [:verbose] do
+    property_setup(
+      fn ->
+        {:ok, apps} = Application.ensure_all_started(:bookstore)
+        fn ->
+          Enum.each(apps, &Application.stop/1)
+          :ok
+        end
+      end,
+      forall cmds <- commands(__MODULE__) do
+        Bookstore.DB.setup()
+        {history, state, result} = run_commands(__MODULE__, cmds)
+        Bookstore.DB.teardown()
+
+        (result == :ok)
+        |> aggregate(command_names(cmds))
+        |> when_fail(
+          IO.puts("""
+          History: #{inspect(history)}
+          State: #{inspect(state)}
+          Result: #{inspect(result)}
+          """)
+        )
+      end
+    )
+  end
+
   def title(), do: friendly_unicode()
 
   def title(s) do
