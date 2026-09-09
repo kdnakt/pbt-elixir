@@ -182,22 +182,22 @@ defmodule BookstoreTest do
   def postcondition(_, {_, _, :return_copy_unknown, _}, {:error, :not_found}) do
     true
   end
-  def postcondition(s, {_, _, :find_book_by_isbn_exists, [isbn]}, res) do
-    res == {:ok, [Map.get(s, isbn, nil)]}
+  def postcondition(s, {_, _, :find_book_by_isbn_exists, [isbn]}, {:ok, [res]}) do
+    book_equal(res, Map.get(s, isbn, nil))
   end
   def postcondition(_, {_, _, :find_book_by_isbn_unknown, _}, {:ok, []}) do
     true
   end
   def postcondition(state, {_, _, :find_book_by_author_matching, [auth]}, {:ok, res}) do
     map = :maps.filter(fn _, {_,_,a,_,_} -> contains?(a, auth) end, state)
-    Enum.sort(res) == Enum.sort(Map.values(map))
+    books_equal(Enum.sort(res), Enum.sort(Map.values(map)))
   end
   def postcondition(_, {_, _, :find_book_by_author_unknown, _}, {:ok, []}) do
     true
   end
   def postcondition(state, {_, _, :find_book_by_title_matching, [title]}, {:ok, res}) do
     map = :maps.filter(fn _, {_,t,_,_,_} -> contains?(t, title) end, state)
-    Enum.sort(res) == Enum.sort(Map.values(map))
+    books_equal(Enum.sort(res), Enum.sort(Map.values(map)))
   end
   def postcondition(_, {_, _, :find_book_by_title_unknown, _}, {:ok, []}) do
     true
@@ -257,5 +257,30 @@ defmodule BookstoreTest do
 
   defp contains_any?(string_or_chars_full, patterns) do
     Enum.any?(patterns, &contains?(string_or_chars_full, &1))
+  end
+
+  defp books_equal([], []) do
+    true
+  end
+  defp books_equal([a | as], [b | bs]) do
+    book_equal(a, b) && books_equal(as, bs)
+  end
+  defp books_equal(_, _) do
+    false
+  end
+
+  defp book_equal(
+    {isbn_a, title_a, author_a, owned_a, avail_a},
+    {isbn_b, title_b, author_b, owned_b, avail_b}
+  ) do
+    {isbn_a, title_a, avail_a} == {isbn_b, title_b, avail_b} &&
+      String.equivalent?(
+        IO.chardata_to_string(title_a),
+        IO.chardata_to_string(title_b)
+      ) &&
+      String.equivalent?(
+        IO.chardata_to_string(author_a),
+        IO.chardata_to_string(author_b)
+      )
   end
 end
