@@ -7,7 +7,7 @@ CREATE TABLE books (
     available smallint DEFAULT 0
 );
 
---:teardown_table_books
+-- :teardown_table_books
 DROP TABLE books;
 
 -- :add_book
@@ -29,14 +29,14 @@ UPDATE books
 SET available = available + 1
 WHERE isbn = $1;
 
--- :find_by_author
+-- :find_book_by_author
 SELECT * FROM books
 WHERE author like $1;
 
--- :find_by_isbn
+-- :find_book_by_isbn
 SELECT * FROM books
 WHERE isbn = $1;
 
--- :find_by_title
+-- :find_book_by_title
 SELECT * FROM books
 WHERE title like $1;

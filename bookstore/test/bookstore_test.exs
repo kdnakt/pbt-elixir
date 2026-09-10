@@ -96,12 +96,11 @@ defmodule BookstoreTest do
           {:call, BookShim, :add_copy_existing, [isbn(s)]},
           {:call, BookShim, :borrow_copy_avail, [isbn(s)]},
           {:call, BookShim, :borrow_copy_unavail, [isbn(s)]},
-          {:call, BookShim, :borrow_copy_existing, [isbn(s)]},
           {:call, BookShim, :return_copy_existing, [isbn(s)]},
           {:call, BookShim, :return_copy_full, [isbn(s)]},
-          {:call, BookShim, :find_book_by_author_existing, [author(s)]},
-          {:call, BookShim, :find_book_by_title_existing, [title(s)]},
-          {:call, BookShim, :find_book_by_isbn_existing, [isbn(s)]}
+          {:call, BookShim, :find_book_by_author_matching, [author(s)]},
+          {:call, BookShim, :find_book_by_title_matching, [title(s)]},
+          {:call, BookShim, :find_book_by_isbn_exists, [isbn(s)]}
         ]
     end
     oneof(always_possible ++ relies_on_state)
