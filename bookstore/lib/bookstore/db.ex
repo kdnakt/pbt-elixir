@@ -34,7 +34,18 @@ defmodule Bookstore.DB do
   end
 
   def borrow_copy(isbn) do
-    handle_single_update(run_query(:borrow_copy, [isbn]))
+    case handle_single_update(run_query(:borrow_copy, [isbn])) do
+      # 0 rows updated means either the book is unknown or no copy is left
+      {:error, :not_found} ->
+        case find_book_by_isbn(isbn) do
+          {:ok, []} -> {:error, :not_found}
+          {:ok, _} -> {:error, :unavailable}
+          other -> other
+        end
+
+      other ->
+        other
+    end
   end
 
   def return_copy(isbn) do
