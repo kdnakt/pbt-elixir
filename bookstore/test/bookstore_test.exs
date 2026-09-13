@@ -272,7 +272,7 @@ defmodule BookstoreTest do
     {isbn_a, title_a, author_a, owned_a, avail_a},
     {isbn_b, title_b, author_b, owned_b, avail_b}
   ) do
-    {isbn_a, title_a, avail_a} == {isbn_b, title_b, avail_b} &&
+    {isbn_a, owned_a, avail_a} == {isbn_b, owned_b, avail_b} &&
       String.equivalent?(
         IO.chardata_to_string(title_a),
         IO.chardata_to_string(title_b)
