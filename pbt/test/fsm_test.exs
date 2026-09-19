@@ -46,4 +46,17 @@ defmodule FSMTest do
   def weight(_from_state, _to_state, _data) do
     1
   end
+
+  def precondition(_from, _to, _data, {:call, _mod, _fun, _args}) do
+    true
+  end
+
+  def postcondition(_from, _to, _data, {:call, _mod, _fun, _args}, _res) do
+    true
+  end
+
+  def next_state_data(_from, _to, data, _res, {:call, _mod, _fun, _args}) do
+    new_data = data
+    new_data
+  end
 end
