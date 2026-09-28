@@ -47,4 +47,9 @@ defmodule BreakShim do
       ignore_errors: [:ignore1, :ignore2]
     ]
   end
+
+  def manual_block(), do: :circuit_breaker.block(@service)
+  def manual_deblock(), do: :circuit_breaker.deblock(@service)
+  def manual_reset(), do: :circuit_breaker.clear(@service)
+
 end
