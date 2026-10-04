@@ -35,15 +35,41 @@ defmodule BreakTest do
   end
 
   def ok(_data) do
-    []
+    [
+      {:history, {:call, BreakShim, :success, []}},
+      {:history, {:call, BreakShim, :err, [valid_error()]}},
+      {:tripped, {:call, BreakShim, :err, [valid_error()]}},
+      {:history, {:call, BreakShim, :ignored_error, [ignored_error()]}},
+      {:history, {:call, BreakShim, :timeout, []}},
+      {:tripped, {:call, BreakShim, :timeout, []}},
+      {:blocked, {:call, BreakShim, :manual_block, []}},
+      {:ok, {:call, BreakShim, :manual_deblock, []}},
+      {:ok, {:call, BreakShim, :manual_reset, []}}
+    ]
   end
 
   def tripped(_data) do
-    []
+    [
+      {:history, {:call, BreakShim, :success, []}},
+      {:history, {:call, BreakShim, :err, [valid_error()]}},
+      {:history, {:call, BreakShim, :ignored_error, [ignored_error()]}},
+      {:history, {:call, BreakShim, :timeout, []}},
+      {:ok, {:call, BreakShim, :manual_deblock, []}},
+      {:ok, {:call, BreakShim, :manual_reset, []}},
+      {:blocked, {:call, BreakShim, :manual_block, []}}
+    ]
   end
 
   def blocked(_data) do
-    []
+    [
+      {:history, {:call, BreakShim, :success, []}},
+      {:history, {:call, BreakShim, :err, [valid_error()]}},
+      {:history, {:call, BreakShim, :ignored_error, [ignored_error()]}},
+      {:history, {:call, BreakShim, :timeout, []}},
+      {:history, {:call, BreakShim, :manual_deblock, []}},
+      {:history, {:call, BreakShim, :manual_reset, []}},
+      {:ok, {:call, BreakShim, :manual_block, []}}
+    ]
   end
 
   def valid_error() do
