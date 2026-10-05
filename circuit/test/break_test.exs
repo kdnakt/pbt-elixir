@@ -89,6 +89,14 @@ defmodule BreakTest do
   def precondition(:ok, to, %{timeouts: n, limit: l}, {:call, _, :timeout, _}) do
     (to == :tripped and n + 1 == l) or (to == :ok and n + 1 != l)
   end
+  def precondition(
+    :ok,
+    to,
+    %{timeouts: n, limit: l},
+    {:call, _, :timeout, _}
+  ) do
+    (to == :tripped and n + 1 == l) or (to == :ok and n + 1 != l)
+  end
   def precondition(_from, _to, _data, _call) do
     true
   end
