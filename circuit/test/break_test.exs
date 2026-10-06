@@ -100,4 +100,8 @@ defmodule BreakTest do
   def precondition(_from, _to, _data, _call) do
     true
   end
+
+  def next_state_data(_from, _to, data, _res, {:call, _m, _f, _args}) do
+    data
+  end
 end
