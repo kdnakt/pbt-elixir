@@ -101,6 +101,18 @@ defmodule BreakTest do
     true
   end
 
+  def next_state_data(:ok, _, data = %{errors: n}, _, {_, _, :err, _}) do
+    %{data | errors: n + 1}
+  end
+  def next_state_data(:ok, _, data = %{timeouts: n}, _, {_, _, :timeout, _}) do
+    %{data | timeouts: n + 1}
+  end
+  def next_state_data(_from, _to, data, _, {_, _, :manual_deblock, _}) do
+    %{data | errors: 0, timeouts: 0}
+  end
+  def next_state_data(_from, _to, data, _, {_, _, :manual_reset, _}) do
+    %{data | errors: 0, timeouts: 0}
+  end
   def next_state_data(_from, _to, data, _res, {:call, _m, _f, _args}) do
     data
   end
