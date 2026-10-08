@@ -116,4 +116,35 @@ defmodule BreakTest do
   def next_state_data(_from, _to, data, _res, {:call, _m, _f, _args}) do
     data
   end
+
+  def postcondition(:tripped, :tripped, _data, _call, {:error, {:circuit_breaker, _}}) do
+    true
+  end
+  def postcondition(_, :blocked, _data, {_, _, :manual_block, _}, :ok) do
+    true
+  end
+  def postcondition(_from, :blocked, _data, _call, {:error, {:circuit_breaker, _}}) do
+    true
+  end
+  def postcondition(_, :ok, _data, {_, _, :success, _}, :success) do
+    true
+  end
+  def postcondition(_, :ok, _data, {_, _, :manual_deblock, _}, :ok) do
+    true
+  end
+  def postcondition(_, _, _data, {_, _, :manual_reset, _}, :ok) do
+    true
+  end
+  def postcondition(:ok, _to, _data, {_, _, :timeout, _}, {:error, :timeout}) do
+    true
+  end
+  def postcondition(:ok, _to, _data, {_, _, :err, _}, {:error, err}) do
+    not Enum.member?([:ignore1, :ignore2], err)
+  end
+  def postcondition(:ok, _to, _data, {_, _, :ignored_error, _}, {:error, err}) do
+    Enum.member?([:ignore1, :ignore2], err)
+  end
+  def postcondition(_from, _to, _data, {:call, _m, _f, _args}, _res) do
+    false
+  end
 end
