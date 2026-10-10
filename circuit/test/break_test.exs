@@ -113,6 +113,15 @@ defmodule BreakTest do
   def next_state_data(_from, _to, data, _, {_, _, :manual_reset, _}) do
     %{data | errors: 0, timeouts: 0}
   end
+  def next_state_data(
+    :ok, _to, data = %{errors: e, timeouts: t}, _, {:call, _, f, _}
+  ) when f == :success or f == :ignored_error do
+    cond do
+      e > 0 -> %{data | errors: e - 1}
+      t > 0 -> %{data | timeouts: t - 1}
+      e == 0 and t == 0 -> data
+    end
+  end
   def next_state_data(_from, _to, data, _res, {:call, _m, _f, _args}) do
     data
   end
